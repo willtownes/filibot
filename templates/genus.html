@@ -1,0 +1,26 @@
+$def with (fname,gname,species)
+
+<html>
+    <head>
+        <title>Filibot: $gname ($fname)</title>
+    </head>
+<body>
+<h1>Filibot- the Filipino Botany Site</h1>
+<div id="breadcrumb">
+<a href="/">home</a>&gt;&gt;
+<a href="/$fname">family $fname</a>
+</div>
+<p>
+This is the index page for the genus <a href="http://en.wikipedia.org/wiki/$gname"><i>$gname</i></a> from the family $fname. The <a href="/static/$gname">raw image files for this genus</a> are also available.
+</p>
+<h2>Available Images</h2>
+<ol>
+$for s in species:
+    <b><li><i><a href="/$fname/$gname/$s">$gname $s</a></i></li></b>
+    <ol>
+    $for f in species[s]:
+        <li><a href="/static$f[1]">$f[0]</li>
+    </ol>
+</ol>
+</body>
+</html>

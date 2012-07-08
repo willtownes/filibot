@@ -1,0 +1,25 @@
+$def with (fname,genera)
+
+<html>
+    <head>
+        <title>Filibot: $fname</title>
+    </head>
+<body>
+<h1>Filibot- the Filipino Botany Site</h1>
+<div id="breadcrumb">
+<a href="/">home</a>
+</div>
+<p>
+This is the index page for the family <a href="http://en.wikipedia.org/wiki/$fname">$fname</a>. The <a href="/static/$fname">raw image files for this family</a> are also available.
+</p>
+<h2>Available Genera</h2>
+<ol>
+$for g in genera:
+    <b><li><i><a href="/$fname/$g">$g</a></i></li></b>
+    <ol>
+    $for s in genera[g]:
+        <b><li><i><a href="/$fname/$g/$s">$g $s</a></i></li></b>
+    </ol>
+</ol>
+</body>
+</html>
