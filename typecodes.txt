@@ -1,0 +1,17 @@
+epitype
+fragment
+HT
+ILT
+INT
+IS
+IST
+IT
+ITF
+LT
+NT
+type
+possible-type
+PT
+ST
+TF
+XT
