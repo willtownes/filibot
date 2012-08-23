@@ -1,0 +1,16 @@
+TYPECODE,MEANING,NOTES
+epitype,epitype,change code to ET
+HT,holotype,
+ILT,isolectotype,
+INT,isoneotype,
+IS,illustration,unsure about this one
+IST,isosyntype,
+IT,isotype,
+LT,lectotype,
+non-type,non-type,change code to NO
+NT,neotype,
+type,type,change code to T
+possible-type,possible-type,change code to POS
+PT,paratype,
+ST,syntype,
+XT,type,not always consistent though... 
