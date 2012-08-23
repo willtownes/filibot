@@ -1,4 +1,4 @@
-HERBARIUM,HCODE,TYPE_CODE,FAMILY,GENUS,SPECIES,IS_FRAGMENT,IS_DRAWING,INFO,SUBSPECIES,VARIETY,ALT_INFO,ALT_GENUS,ALT_SPECIES,ALT_TYPE,YEAR,FILEPATH,FILETYPE,NOTES,UPDATE_DATE
+HCODE,HSERIAL,TCODE,FAMILY,GENUS,SPECIES,IS_FRAGMENT,IS_DRAWING,INFO,SUBSPECIES,VARIETY,ALT_INFO,ALT_GENUS,ALT_SPECIES,ALT_TYPE,YR,FILEPATH,FILETYPE,NOTES,LAST_UPDATE
 A,98353,HT,Actinidiaceae,Saurauia,knemifolia,N,N,"HT, A98353",,,,,,,2003,"/Actinidiaceae/Saurauia knemifolia, HT, A98353.jpg",JPG,,
 A,96363,HT,Actinidiaceae,Saurauia,latibractea,N,N,"(S ramosii, HT) A96363",,,"S ramosii, HT",Saurauia,ramosii,,2003,"/Actinidiaceae/Saurauia latibractea (S ramosii, HT) A96363.jpg",JPG,,
 A,96495,HT,Boraginaceae,Tournefortia,luzonica,N,N,"v. sublucens, HT, A96495",,sublucens,,,,,2003,"/Boraginaceae/Tournefortia luzonica v. sublucens, HT, A96495.bmp",BMP,,
