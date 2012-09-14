@@ -1,12 +1,11 @@
 '''
-This is a script to upload all the images to flickr, and store the image ID
-in the database. Much of the authentication code borrows heavily from:
+This is a script to authenticate to flickr and get an auth token.
+Much of the authentication code borrows heavily from:
 https://github.com/simplegeo/python-oauth2#readme
 http://mkelsey.com/2011/07/03/Flickr-oAuth-Python-Example.html
 '''
-import webbrowser,sqlite3,ConfigParser,os,urlparse,time,httplib2
+import webbrowser,ConfigParser,os,urlparse,time,httplib2
 import oauth2 as oauth
-from dbmake import dbconnect
 
 #global variables
 configdefault = "flickr.cfg"
@@ -106,8 +105,4 @@ if __name__ == "__main__":
         access_token['user_nsid'] = raw_input("Provide the user_nsid: ")
         access_token['oauth_token_secret'] = raw_input("Provide the oauth token secret: ")
     else: access_token = authflow()
-    #database stuff
-    conn = dbconnect()
-    with conn:
-        c = conn.cursor()
     
