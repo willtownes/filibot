@@ -1,5 +1,5 @@
 '''uploads photos to flickr and records the photo_id in the database.'''
-import os,flickr,sqlite3,logging,sys
+import os,flickr,sqlite3,logging,sys,csv
 from flickr_auth import getconfig
 
 def makelogger(filename='log.txt'):
@@ -15,18 +15,20 @@ def makelogger(filename='log.txt'):
     log.info("Starting the log...")
     return log
 
-def postphotos(conn,path,flickrAPIobj):
+def postphotos(conn,path,flickrAPIobj,csvlocation):
     '''posts photos to flickr according to database records found via conn. Path is the parent directory of the images.
     flickrAPIobj is a pre-authenticated object for interfacing with the Flickr API (using someone else's library).'''
     f = flickrAPIobj #shortened name.
     c = conn.cursor()
     tags = ['Philippines','Botany','Asia','plants','specimens','filibot']
-    log = makelogger()
+    log = makelogger(filename='flickr_log.txt')
     counter = 0
+    ofile = open(csvlocation,'wb')
+    resfile = csv.writer(ofile)
+    resfile.writerow(("Filepath","Flickr ID"))
     try:
-        data = c.execute('''select p.FILEPATH,f.FAMILY,p.GENUS,p.SPECIES,p.ALT_GENUS,p.ALT_SPECIES
-                            from PLANTS p,REF_FAM f where f.F_ID = p.F_ID and p.FLICKR_ID is NULL''')
-        for row in data:
+        for row in c.execute('''select p.FILEPATH,f.FAMILY,p.GENUS,p.SPECIES,p.ALT_GENUS,p.ALT_SPECIES
+                            from PLANTS p,REF_FAM f where f.F_ID = p.F_ID and p.FLICKR_ID is NULL'''):
             counter += 1
             print(counter)
             filepath = os.path.normpath(os.path.join(path,row[0].lstrip('/'))) #normalize filepath
@@ -34,18 +36,35 @@ def postphotos(conn,path,flickrAPIobj):
             itags = str(' '.join(tags+list(filter(None,row[1:])))) #filters out None types
             fil = open(filepath, 'rb')
             photo_id = f.post(params={'title':title,'tags':itags}, files=fil) #this is actually a dictionary.
+            fil.close() #save memory.
             if photo_id['stat'] != 'ok':
                 log.error("Failed to post %s to flickr, because of flickr error %s"%(row[0],str(photo_id)))
             else:
                 log.info("Posted %s to flickr. Photo ID is %s"%(row[0],photo_id['photoid'])) #debugging
-                c.execute('''update PLANTS set FLICKR_ID = ? where FILEPATH = ?''',(photo_id['photoid'],row[0]))
+                resfile.writerow((row[0],photo_id['photoid']))
+    except Exception as e:
+        log.exception(e)
+    finally:
+        ofile.close() #csvfile with results.
+        log.info("Ended posting photos to flickr")
+        logging.shutdown()
+
+def insertids(conn,csvlocation):
+    '''takes a CSV containing filepaths and flickr IDs and inserts records into the database'''
+    log = makelogger(filename='database_log.txt')
+    log.info("Starting process of extracting IDs from temporary CSV and inserting into database")
+    c = conn.cursor()
+    try:
+        reader = csv.reader(open(csvlocation,'rb'))
+        next(reader) #skip header row.
+        for row in reader:
+            c.execute('''update PLANTS set FLICKR_ID = ? where FILEPATH = ?''',(row[1],row[0]))
     except Exception as e:
         log.exception(e)
     finally:
         conn.commit()
         log.info("Process ended")
         logging.shutdown()
-        fil.close()
         
 if __name__ == "__main__":
     cfg = getconfig()
@@ -58,6 +77,8 @@ if __name__ == "__main__":
               }
     f = flickr.FlickrAPI(**tokens)
     #db stuff
+    csvlocation = 'results.csv'
     conn = sqlite3.connect("plants.sqlite")
     with conn:
-        postphotos(conn,path,f)
+        postphotos(conn,path,f,csvlocation)
+        insertids(conn,csvlocation)
