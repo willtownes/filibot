@@ -9,3 +9,4 @@
 *.db
 *.sqlite
 *.cfg
+*log.txt
