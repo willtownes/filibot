@@ -34,9 +34,12 @@ def postphotos(conn,path,flickrAPIobj,csvlocation):
             filepath = os.path.normpath(os.path.join(path,row[0].lstrip('/'))) #normalize filepath
             title = str(os.path.splitext(os.path.split(row[0])[-1])[0]) #separate the title from the filepath
             itags = str(' '.join(tags+list(filter(None,row[1:])))) #filters out None types
-            fil = open(filepath, 'rb')
-            photo_id = f.post(params={'title':title,'tags':itags}, files=fil) #this is actually a dictionary.
-            fil.close() #save memory.
+            if not os.path.exists(filepath):
+                photo_id = {'stat':'file not found'}
+            else:
+                fil = open(filepath, 'rb')
+                photo_id = f.post(params={'title':title,'tags':itags}, files=fil) #this is actually a dictionary.
+                fil.close() #save memory.
             if photo_id['stat'] != 'ok':
                 log.error("Failed to post %s to flickr, because of flickr error %s"%(row[0],str(photo_id)))
             else:
@@ -44,6 +47,9 @@ def postphotos(conn,path,flickrAPIobj,csvlocation):
                 resfile.writerow((row[0],photo_id['photoid']))
     except Exception as e:
         log.exception(e)
+        log.info("Filepath: %s"%filepath)
+        log.info("Title: %s"%title)
+        log.info("itags: %s"%itags)
     finally:
         ofile.close() #csvfile with results.
         log.info("Ended posting photos to flickr")
@@ -59,6 +65,9 @@ def insertids(conn,csvlocation):
         next(reader) #skip header row.
         for row in reader:
             c.execute('''update PLANTS set FLICKR_ID = ? where FILEPATH = ?''',(row[1],row[0]))
+    except FlickrAPIError as e:
+        log.exception(e.code)
+        log.exception(e.msg)
     except Exception as e:
         log.exception(e)
     finally:
@@ -69,11 +78,10 @@ def insertids(conn,csvlocation):
 if __name__ == "__main__":
     cfg = getconfig()
     path = os.path.expanduser(r'~\My Documents\filibot\static')
-    photofile = "test_photo.jpg"
     tokens = {'api_key':cfg['api_key'],
               'api_secret':cfg['secret'],
-              'oauth_token': raw_input('Provide oauth token:\n>> '),
-              'oauth_token_secret': raw_input('Provide oauth secret:\n>> ')
+              'oauth_token': cfg['oauth_token'],
+              'oauth_token_secret': cfg['oauth_secret']
               }
     f = flickr.FlickrAPI(**tokens)
     #db stuff

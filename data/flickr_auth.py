@@ -1,5 +1,6 @@
 '''
 This is a script to authenticate to flickr and get an auth token.
+The token(s) are then stored in a configuration file.
 Much of the authentication code borrows heavily from:
 https://github.com/simplegeo/python-oauth2#readme
 http://mkelsey.com/2011/07/03/Flickr-oAuth-Python-Example.html
@@ -20,13 +21,15 @@ params = {'oauth_nonce': oauth.generate_nonce(),
           'oauth_callback':callback_url         
           }
 
-def makeconfig1(key,secret,configfile=configdefault):
+def makeconfig1(key,secret,oauth_token=None,oauth_secret=None,configfile=configdefault):
     '''inserts the provided API key and secret into a configuration file
-    for later use'''
+    for later use. If provided, the oauth_token and oauth_secret are also added.'''
     cfg = ConfigParser.ConfigParser()
     cfg.add_section('Flickr_API')
     cfg.set('Flickr_API','api_key',key)
     cfg.set('Flickr_API','secret',secret)
+    if oauth_token: cfg.set('Flickr_API','oauth_token',oauth_token)
+    if oauth_secret: cfg.set('Flickr_API','oauth_secret',oauth_secret)
     with open(configfile,'wb') as ofile:
         cfg.write(ofile)
 
@@ -37,6 +40,11 @@ def getconfig(configfile=configdefault):
     params = {}
     params['api_key'] = config.get('Flickr_API','api_key')
     params['secret'] = config.get('Flickr_API','secret')
+    try:
+        params['oauth_token'] = config.get('Flickr_API','oauth_token')
+        params['oauth_secret'] = config.get('Flickr_API','oauth_secret')
+    except:
+        print('no oauth token found in configuration file')
     return params
 
 def getreqtoken(consumer,url=request_token_url,params=params):
@@ -68,15 +76,10 @@ def getaccesstoken(consumer,oauth_token,oauth_secret,oauth_verifier,url=access_t
     if resp['status'] != '200': raise Exception("Invalid response %s." % resp['status'])
     else: return dict(urlparse.parse_qsl(content))
 
-def authflow():
+def authflow(key,secret):
     '''top-level function to run through the authentication flow if the user doesn't already have an access token.
     Depends on a bunch of global variables!'''
-    if not os.path.exists(configdefault):
-        key = raw_input("Provide the API key: \n> ")
-        secret = raw_input("Provide the secret: \n> ")
-        makeconfig1(key,secret)
-    cfg = getconfig() #this is a dictionary
-    consumer = oauth.Consumer(key=cfg['api_key'],secret=cfg['secret'])
+    consumer = oauth.Consumer(key=key,secret=secret)
     request_token = getreqtoken(consumer) #this is a dictionary
     print("Request Token:")
     print("    - oauth_token        = %s" % request_token['oauth_token'])
@@ -97,12 +100,19 @@ def authflow():
     
 if __name__ == "__main__":
     #authentication stuff
+    if not os.path.exists(configdefault): 
+        key = raw_input("Provide the API key: ")
+        secret = raw_input("Provide the API secret: ")
+    else: #ordinarily we assume the API key and the secret are already stored in config file.
+        cfg = getconfig()
+        key = cfg['api_key']
+        secret = cfg['secret']
     q = raw_input("If you know the access token, type 'Y', otherwise just hit enter:\n> ")
     if q.lower() == 'y':
         access_token = {}
-        access_token['username'] = raw_input("Provide the username: ")
         access_token['oauth_token'] = raw_input("Provide the oauth token: ")
-        access_token['user_nsid'] = raw_input("Provide the user_nsid: ")
         access_token['oauth_token_secret'] = raw_input("Provide the oauth token secret: ")
-    else: access_token = authflow()
+    else:
+        access_token = authflow(key,secret)
+    makeconfig1(key,secret,oauth_token=access_token['oauth_token'],oauth_secret=access_token['oauth_token_secret'])
     
