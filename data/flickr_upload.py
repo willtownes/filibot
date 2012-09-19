@@ -28,7 +28,8 @@ def postphotos(conn,path,flickrAPIobj,csvlocation):
     resfile.writerow(("Filepath","Flickr ID"))
     try:
         for row in c.execute('''select p.FILEPATH,f.FAMILY,p.GENUS,p.SPECIES,p.ALT_GENUS,p.ALT_SPECIES
-                            from PLANTS p,REF_FAM f where f.F_ID = p.F_ID and p.FLICKR_ID is NULL'''):
+                            from PLANTS p,REF_FAM f where f.F_ID = p.F_ID and p.FILETYPE != 'BMP'
+                            and p.FLICKR_ID is NULL'''): #excluding BMP files temporarily since they are really large.
             counter += 1
             print(counter)
             filepath = os.path.normpath(os.path.join(path,row[0].lstrip('/'))) #normalize filepath
@@ -37,9 +38,9 @@ def postphotos(conn,path,flickrAPIobj,csvlocation):
             if not os.path.exists(filepath):
                 photo_id = {'stat':'file not found'}
             else:
-                fil = open(filepath, 'rb')
-                photo_id = f.post(params={'title':title,'tags':itags}, files=fil) #this is actually a dictionary.
-                fil.close() #save memory.
+                with open(filepath, 'rb') as fil:
+                    #the photo_id response is actually a dictionary.
+                    photo_id = f.post(params={'title':title,'tags':itags}, files=fil)
             if photo_id['stat'] != 'ok':
                 log.error("Failed to post %s to flickr, because of flickr error %s"%(row[0],str(photo_id)))
             else:
