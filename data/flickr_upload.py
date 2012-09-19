@@ -1,5 +1,5 @@
 '''uploads photos to flickr and records the photo_id in the database.'''
-import os,flickr,sqlite3,logging,sys,csv
+import os,flickr,sqlite3,logging,sys,csv,httplib
 from flickr_auth import getconfig
 
 def makelogger(filename='log.txt'):
@@ -40,13 +40,15 @@ def postphotos(conn,path,flickrAPIobj,csvlocation):
             else:
                 with open(filepath, 'rb') as fil:
                     #the photo_id response is actually a dictionary.
-                    photo_id = f.post(params={'title':title,'tags':itags}, files=fil)
+                    try: photo_id = f.post(params={'title':title,'tags':itags}, files=fil)
+                    #this kind of exception usually means the file is too large.
+                    except httplib.BadStatusLine: photo_id = {'stat' : "BadStatusLine exception"}
             if photo_id['stat'] != 'ok':
-                log.error("Failed to post %s to flickr, because of flickr error %s"%(row[0],str(photo_id)))
+                log.error("Failed to post %s to flickr, because of error %s"%(row[0],str(photo_id)))
             else:
                 log.info("Posted %s to flickr. Photo ID is %s"%(row[0],photo_id['photoid'])) #debugging
                 resfile.writerow((row[0],photo_id['photoid']))
-    except Exception as e:
+    except Exception as e: #unanticipated exceptions, break out of the loop and record details.
         log.exception(e)
         log.info("Filepath: %s"%filepath)
         log.info("Title: %s"%title)
