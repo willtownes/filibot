@@ -77,7 +77,10 @@ def insertids(conn,csvlocation):
         
 if __name__ == "__main__":
     cfg = getconfig()
-    path = os.path.expanduser(r'~\My Documents\filibot\static')
+    if os.name.lower() == 'nt': #windows
+        path = os.path.expanduser(r'~\My Documents\filibot\static')
+    else: #mac
+        path = os.path.expanduser(r'~/Documents/filibot/static')
     tokens = {'api_key':cfg['api_key'],
               'api_secret':cfg['secret'],
               'oauth_token': cfg['oauth_token'],
