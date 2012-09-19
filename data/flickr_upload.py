@@ -15,6 +15,11 @@ def makelogger(filename='log.txt'):
     log.info("Starting the log...")
     return log
 
+def count_ids(conn):
+    '''Counts how many records in the database have flickr IDs.'''
+    c = conn.cursor()
+    return c.execute('''select count(*) from plants where flickr_id is not null''').fetchone()[0]
+
 def postphotos(conn,path,flickrAPIobj,csvlocation):
     '''posts photos to flickr according to database records found via conn. Path is the parent directory of the images.
     flickrAPIobj is a pre-authenticated object for interfacing with the Flickr API (using someone else's library).'''
@@ -94,5 +99,12 @@ if __name__ == "__main__":
     csvlocation = 'results.csv'
     conn = sqlite3.connect("plants.sqlite")
     with conn:
-        postphotos(conn,path,f,csvlocation)
-        insertids(conn,csvlocation)
+        count = count_ids(conn)
+        print("Detected %d records in database with flickr IDs"%count)
+        go = raw_input('''Detected 3881 records in database with flickr IDs.
+                        Please compare record count with flickr and correct any discrepancy.
+                        Enter 'y' to proceed, any other key to abort.\n> ''')
+        if go.lower() == 'y':
+            postphotos(conn,path,f,csvlocation)
+            insertids(conn,csvlocation)
+        else: pass #abort the script if the user doesn't type y.
