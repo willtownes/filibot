@@ -101,9 +101,7 @@ if __name__ == "__main__":
     with conn:
         count = count_ids(conn)
         print("Detected %d records in database with flickr IDs"%count)
-        go = raw_input('''Detected 3881 records in database with flickr IDs.
-                        Please compare record count with flickr and correct any discrepancy.
-                        Enter 'y' to proceed, any other key to abort.\n> ''')
+        go = raw_input('''Please compare record count with flickr and correct any discrepancy. Enter 'y' to proceed, any other key to abort.\n> ''')
         if go.lower() == 'y':
             postphotos(conn,path,f,csvlocation)
             insertids(conn,csvlocation)
