@@ -2,6 +2,6 @@ This is a website for Filipino Botany. The main purpose of the site is to provid
 
 The site is implemented using the following tools:
 scripting language: python 2.7
-web frameworkd:     web.py
-database:           CSV file and shelve
+web framework:      web.py
+database:           sqlite 3
 

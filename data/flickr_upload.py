@@ -33,7 +33,7 @@ def postphotos(conn,path,flickrAPIobj,csvlocation):
     resfile.writerow(("Filepath","Flickr ID"))
     try:
         for row in c.execute('''select p.FILEPATH,f.FAMILY,p.GENUS,p.SPECIES,p.ALT_GENUS,p.ALT_SPECIES
-                            from PLANTS p,REF_FAM f where f.F_ID = p.F_ID and p.FILETYPE != 'BMP'
+                            from PLANTS p,REF_FAM f where f.F_ID = p.F_ID and p.FILETYPE != 'BMP' and p.P_ID not in (14390,15414)
                             and p.FLICKR_ID is NULL'''): #excluding BMP files temporarily since they are really large.
             counter += 1
             print(counter)
