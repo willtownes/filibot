@@ -9,7 +9,7 @@ config = {
     'url': 'https://github.com/willtownes/filibot',
     'author_email': 'filibot.web@gmail.com',
     'version': '0.1',
-    'install_requires': ['nose','web'],
+    'install_requires': ['nose','web.py'],
     'packages': ['filibot'],
     'scripts': ['bin/app.py'],
     'name': 'filibot'
