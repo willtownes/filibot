@@ -1,4 +1,5 @@
-import web,os,plants
+import web,os
+from filibot import plants
 
 urls = ('/(.*)/','redirect',
         '/','index',
