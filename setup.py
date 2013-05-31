@@ -11,6 +11,7 @@ config = {
     'version': '0.1',
     'install_requires': ['nose','web.py'],
     'packages': ['filibot'],
+    'package_data':{'filibot':['templates/*']},
     'scripts': ['bin/app.py'],
     'name': 'filibot'
 }
