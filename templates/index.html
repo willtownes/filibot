@@ -1,20 +1,23 @@
-$def with (fnames)
+$def with (families)
 <html>
     <head>
         <title>Filibot- the Filipino Botany Site</title>
     </head>
 <body>
 <h1>Filibot- the Filipino Botany Site</h1>
+<p>(<a href="/tagalog">Tagalog</a>)</p>
 <p>
-Filibot, the Filipino Botany Site, is an index of botanical images from the Philippines. The photographs were taken by the late Leonardo Co of specimens found in herbaria such as the Arnold Arboretum and the University of Michigan. "Sir Leonard" was a brilliant and passionate master of the plants of this Southeast Asian archipelago, but he tragically passed away while doing fieldwork on the island of Leyte. He was dedicated to advancing the knowledge of Filipino Botany among both casual enthusiasts and professionals, and used these images to assist him in identifying newly collected specimens. Hopefully, this site can be a resource for botany, biology, and environmental science students in the Philippines, as well as researchers who are seeking to learn how to identify plants found there. 
+Filibot, the Filipino Botany Site, is an index of botanical images from the Philippines. The photographs were taken by the late Leonardo Co of specimens found in herbaria such as the Arnold Arboretum and the University of Michigan. "Sir Leonard" was a brilliant and passionate master of the plants of this Southeast Asian archipelago, but he tragically passed away while doing fieldwork on the island of Leyte. He was dedicated to advancing the knowledge of Filipino Botany among both casual enthusiasts and professionals, and used these images to assist him in identifying newly collected specimens. Hopefully, this site can be a resource for botany, biology, and environmental science students in the Philippines, as well as researchers who are seeking to learn how to identify plants found there.
 </p>
 <p>
-The <a href="/static/">directory of raw images</a> is accessible directly, or, navigate to the family, genus, or species of interest using the links below. Each detail page also links to a corresponding wikipedia page for more information. Finally, the <a href="https://github.com/willtownes/filibot">source code repository of this project</a> is available via Github.
+The <a href="http://www.flickr.com/photos/filibot/">directory of images</a> is accessible via flickr, or, navigate to the family, genus, or species of interest using the links below. Each detail page also links to a corresponding wikipedia page for more information. Finally, the <a href="https://github.com/willtownes/filibot">source code repository of this project</a> is available via Github.
 </p>
+<div>
 <h2>Available Families</h2>
 <ol>
-$for f in fnames:
-    <b><li><i><a href="/$f">$f</a></i></li></b>
+$for f in families:
+    <b><li><i><a href="http://www.flickr.com/photos/filibot/tags/$f">$f</a></i></li></b>
 </ol>
+</div>
 </body>
 </html>

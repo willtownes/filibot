@@ -1,0 +1,22 @@
+$def with (families)
+<html>
+    <head>
+        <title>Filibot- Filipino Botanika</title>
+    </head>
+<body>
+<h1>Filibot- Filipino Botanika</h1>
+<p>(<a href="/">English</a>)</p>
+<p>
+Ang Filibot (Filipino Botanika), ay isang talatuntunan ng mga larawan ng uri ng halaman na matatagpuan sa Pilipinas, isang kapuluan sa Southeast Asia. Ang mga larawan ay kuha ng yumaong Leonardo Co, at ito ay sa mga ispesimen na matatagpuan sa herbarya ng Arnold Arboretum at ng  University of Michigan. Si "Sir Leonard" ay dalubhasa at masimbuyong maestro ng botanika ng Pilipinas, na sa kasawiang palad ay namatay habang nananaliksik sa isla ng Leyte. Dedikado siya sa pagpapaunlad ng kaalaman tungkol sa botanika ng Pilipinas sa kapuwa may kaswal at propesyonal na interes, at ginamit niya ang mga larawan dito para kilalanin ang mga bagong likom na ispesimen. Maging sanggunian sana ang Filbot sa mga Pilipinong mag-aaral sa Agham ng Biolohiya (Biology), Botaniko (Botany), at Pangkapaligiran (Environmental Science), at sa lahat ng mga mananaliksik na humahangad na matutong kilalanin ang mga uri ng halaman ng Pilipinas. Salamat sa Scholastica Cororaton para sa itong pagsasalin.
+</p>
+<p>
+Ang <a href="http://www.flickr.com/photos/filibot/">listahan ng mga larawan</a> ay makukuha sa flickr; maari din na makapunta sa ninanais na family, genus, o species sa pamamagitan ng mga  kawing (links) sa ibaba. Ang bawat pahina ay nakakawing din sa isang pahina sa wikipedia kung saan makikita ang ibang impormasyon. Ang <a href="https://github.com/willtownes/filibot">source code ng proyektong ito</a> ay matatagpuan sa Github.
+</p>
+<h2>Mga Families</h2>
+<ol>
+$for f in families:
+    <b><li><i><a href="/$f">$f</a></i></li></b>
+</ol>
+</body>
+</html>
+
