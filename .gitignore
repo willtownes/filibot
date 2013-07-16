@@ -10,3 +10,6 @@
 *.sqlite
 *.cfg
 *log.txt
+build/*
+dist/*
+filibot.egg-info/*
