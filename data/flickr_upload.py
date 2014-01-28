@@ -1,4 +1,5 @@
-'''uploads photos to flickr and records the photo_id in the database.'''
+'''uploads photos to flickr and records the photo_id in the database. The Flickr API client is from:
+https://github.com/michaelhelmick/python-flickr'''
 import os,flickr,sqlite3,logging,sys,csv,httplib
 from flickr_auth import getconfig
 
