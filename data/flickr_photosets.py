@@ -13,14 +13,16 @@ def make_photosets(conn,flickrAPIobj,csvlocation):
     resfile.writerow(("F_ID","P_ID","PHOTOSET_ID"))
     try:
         for row in c.execute('''SELECT f.f_id,f.family,f.subfamily, min(p.p_id),p.flickr_id from plants p, ref_fam f where p.f_id = f.f_id group by p.f_id'''):
-            print(row)
+            #print(row)
             if row[2] is None:
                 name = row[1]
             else:
                 name = row[1]+'-'+row[2]
-            print(name)
-            set_id = f.post('flickr.photosets.create',params={'title':name,'primary_photo_id':row[4]})
-            if photo_id['stat'] != 'ok':
+            #print(name)
+            params = {'title':name.encode('utf-8'),'primary_photo_id':row[4].encode('utf-8')}
+            print(params)
+            set_id = f.post('flickr.photosets.create',params=params)
+            if set_id['stat'] != 'ok':
                 print("Failure to post for family: (%d,%s)"%(row[0],row[1]))
                 break
             else:
