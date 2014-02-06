@@ -3,7 +3,10 @@ https://github.com/michaelhelmick/python-flickr'''
 import flickr,sqlite3,csv
 from flickr_auth import getconfig
 # given a single photo ID, create a photoset with specified name and print out the ID of the photoset
-    
+
+#photo ID: 8101132900
+#set title: Actinidiaceae
+
 def make_photosets(conn,flickrAPIobj,csvlocation):
     '''Create a photoset for each family and write out the flickr ID for the photoset to CSV file'''
     f = flickrAPIobj #shortened name.
@@ -20,14 +23,14 @@ def make_photosets(conn,flickrAPIobj,csvlocation):
                 name = row[1]+'-'+row[2]
             #print(name)
             params = {'title':name.encode('utf-8'),'primary_photo_id':row[4].encode('utf-8')}
-            print(params)
+            #print(params)
             set_id = f.post('flickr.photosets.create',params=params)
             if set_id['stat'] != 'ok':
                 print("Failure to post for family: (%d,%s)"%(row[0],row[1]))
                 break
             else:
                 print(set_id)
-                resfile.writerow((row[0],row[3],set_id['id']))
+                resfile.writerow((row[0],row[3],set_id['photoset']['id']))
     finally:
         ofile.close() #csvfile with results.
 
