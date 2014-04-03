@@ -42,7 +42,22 @@ def insertids(conn,csvlocation):
     for row in reader:
         c.execute('''update REF_FAM set FLICKR_ID = ? where F_ID = ?''',(row[2],row[0]))
     conn.commit()
- 
+
+def photosIntoSets(conn,flickrAPIobj):
+	'''once the photosets have all been created, inserts all the remaining plant photos into their family's set'''
+	f = flickrAPIobj #shortened name.
+	c = conn.cursor()
+	counter = 0
+	for row in c.execute('''SELECT p.flickr_id,f.flickr_id from plants p, ref_fam f where p.f_id=f.f_id order by f.family'''):
+		params = {'photoset_id':row[1],'photo_id':row[0]}            	
+        #print(params)
+		try:
+			set_id = f.post('flickr.photosets.addPhoto',params=params)
+		except flickr.FlickrAuthError, e:
+			pass
+		counter += 1
+		if counter % 10 == 0: print(counter)
+
 if __name__ == "__main__":
     cfg = getconfig()
     tokens = {'api_key':cfg['api_key'],
@@ -55,5 +70,6 @@ if __name__ == "__main__":
     csvlocation = 'photoset_results.csv'
     conn = sqlite3.connect("plants.sqlite")
     with conn:
-        make_photosets(conn,f,csvlocation)
-        insertids(conn,csvlocation)
+        #make_photosets(conn,f,csvlocation)
+        #insertids(conn,csvlocation)
+		photosIntoSets(conn,f)
