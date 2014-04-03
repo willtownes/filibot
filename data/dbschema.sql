@@ -28,6 +28,12 @@ FOREIGN KEY(F_ID) REFERENCES REF_FAM(F_ID),
 FOREIGN KEY(IS_FRAGMENT) REFERENCES REF_YN(YN_VAL),
 FOREIGN KEY(IS_DRAWING) REFERENCES REF_YN(YN_VAL)
 );
+CREATE TABLE REF_FAM (
+f_id integer primary key autoincrement,
+family text not null,
+notes text,
+alt_family text,
+subfamily text, flickr_id text);
 CREATE TABLE REF_HERB
 (
 H_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -57,9 +63,3 @@ POINT_REL_NUM TEXT NOT NULL,
 SCRIPT_NAME TEXT NOT NULL,
 UPDATE_DATE DATE DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE "ref_fam" (
-f_id integer primary key autoincrement,
-family text not null,
-notes text,
-alt_family text,
-subfamily text, flickr_id int);
